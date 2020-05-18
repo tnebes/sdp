@@ -3,5 +3,7 @@ import gui
 def main():
     gui.main_window.mainloop()
 
-main()
+if __name__ == "__main__":
+    main()
+
 

@@ -2,235 +2,316 @@ import tkinter as tk
 from tkinter import ttk
 from classes import *
 
+SCREEN_RESOLUTION = "800x600"
+VERSION = "0.1"
+
 main_window = tk.Tk()
-main_window.title("Student Data Programme 0.1")
+main_window.title("Student Data Programme " + VERSION)
 main_window.resizable(False, False)
-main_window.geometry("800x600")
+main_window.geometry(SCREEN_RESOLUTION)
 main_window_tab_notebook = ttk.Notebook(main_window)
 
 def create_tabs():
+    """Creates all the tabs necessary for the program to work.
+    Function returns all the tabs which contain all the GUI elements"""
 
-    tab_contents = {}
+    all_tabs = {}
 
     def create_student_tab():
+        """creates all the elements of the student tab and returns the elements which are storied in the My_Tab class"""
+        # NOTE(tnebes) All the frames in this tab
+        this_tab = My_Tab("students")
+        this_tab.frame = tk.Frame(main_window)
+        this_tab.student_info_frame = tk.Frame(this_tab.frame)
+        this_tab.all_students_frame = tk.Frame(this_tab.frame)
+        this_tab.uid_frame = tk.Frame(this_tab.frame)
 
-        # placing all these in a dictionary so that we can use them outside the function.
-        student_gui_objects = {}
-        
-        this_tab_frame = tk.Frame(main_window)
-        this_tab_frame.pack()
-        student_info_frame = tk.Frame(this_tab_frame)
-        student_info_frame.pack(side=tk.LEFT)
-        all_students_frame = tk.Frame(this_tab_frame)
-        all_students_frame.pack(side=tk.RIGHT)
-        uid_frame = tk.Frame(this_tab_frame)
-        uid_frame.pack(side=tk.BOTTOM)
-        student_gui_objects["this_tab_frame"] = this_tab_frame
-        student_gui_objects["student_info_frame"] = student_info_frame
-        student_gui_objects["all_students_frame"] = all_students_frame
-        student_gui_objects["uid_frame"] = uid_frame
+        this_tab.name_label = My_Label(
+                this_tab.student_info_frame,
+                text="Name:",
+                column=0, row=0)
+        this_tab.first_name_label = My_Label(
+                this_tab.student_info_frame,
+                text="First name:",
+                column=0, row=1, pady=8)
+        this_tab.last_name_label = My_Label(
+                this_tab.student_info_frame,
+                text="Last Name:",
+                column=0, row=2, pady=9)
+        this_tab.first_name_entry = My_Entry(
+                this_tab.student_info_frame,
+                width=32, column=1,
+                row=1, pady=8)
+        this_tab.last_name_entry = My_Entry(
+                this_tab.student_info_frame,
+                width=32,
+                column=1, row=2,
+                pady=8)
+        this_tab.student_groups_label = My_Label(
+                this_tab.student_info_frame,
+                text="Groups:",
+                column=0, row=3)
+        this_tab.student_groups = My_Listbox(
+                this_tab.student_info_frame,
+                height=4, width=32,
+                column=1, row=3)
+        this_tab.student_emails_label = My_Label(
+                this_tab.student_info_frame,
+                text="E-mails:", column=0,
+                row=4)
+        this_tab.student_emails = My_Listbox(
+                this_tab.student_info_frame,
+                height=4, width=32,
+                column=1, row=4)
+        this_tab.student_notes_label = My_Label(
+                this_tab.student_info_frame,
+                text="Notes:", column=0,
+                row=5)
+        this_tab.student_notes = My_Listbox(
+                this_tab.student_info_frame,
+                height=10, width=32,
+                column=1, row=5)
+        this_tab.change_data_button = My_Button(
+                this_tab.student_info_frame,
+                text="Apply", column=1,
+                row=6, sticky="W")
+        this_tab.add_student_button = My_Button(
+                this_tab.student_info_frame,
+                text="Add", column=1,
+                row=6, sticky="N")
+        this_tab.remove_student_button = My_Button(
+                this_tab.student_info_frame,
+                text="Remove", column=1,
+                row=6, sticky="E")
 
-        first_name_entry_var = tk.StringVar()
-        last_name_entry_var = tk.StringVar()
-        name_label = ttk.Label(student_info_frame, text="Name:")
-        first_name_label = ttk.Label(student_info_frame, text="First name:")
-        last_name_label = ttk.Label(student_info_frame, text="Last Name:")
-        first_name_entry = ttk.Entry(student_info_frame, width=32, textvariable=first_name_entry_var)
-        last_name_entry = ttk.Entry(student_info_frame, width=32, textvariable=last_name_entry_var)
-        student_gui_objects["first_name_entry_var"] = first_name_entry_var
-        student_gui_objects["last_name_entry_var"] = last_name_entry
-        student_gui_objects["name_label"] = name_label
-        student_gui_objects["first_name_label"] = first_name_label
-        student_gui_objects["last_name_label"] = last_name_label
-        student_gui_objects["first_name_entry"] = first_name_entry
-        student_gui_objects["last_name_entry"] = last_name_entry
+        this_tab.all_students_label = My_Label(
+                this_tab.all_students_frame,
+                text="Students:", column=0,
+                row=0, sticky="W")
+        this_tab.all_students_listbox = My_Listbox(
+                this_tab.all_students_frame,
+                height=20,width=32,
+                column=0, row=1)
 
-        name_label.grid(column=0, row=0)
-        first_name_label.grid(column=0, row=1, pady=8)
-        first_name_entry.grid(column=1, row=1, pady=8)
-        last_name_label.grid(column=0, row=2, pady=8)
-        last_name_entry.grid(column=1, row=2, pady=8)
-        
-        student_groups_label = ttk.Label(student_info_frame, text="Groups:")
-        student_groups = tk.Listbox(student_info_frame, height=4, width=32)
-        student_emails_label = ttk.Label(student_info_frame, text="E-mails:")
-        student_emails = tk.Listbox(student_info_frame, height=4, width=32)
-        student_notes_label = ttk.Label(student_info_frame, text="Notes:")
-        student_notes = tk.Listbox(student_info_frame, height=10, width=32)
-        change_data_button = tk.Button(student_info_frame, text="Apply")
-        add_student_button = tk.Button(student_info_frame, text="Add")
-        remove_student_button = tk.Button(student_info_frame, text="Remove")
-        student_gui_objects["student_groups_label"] = student_groups_label
-        student_gui_objects["student_groups"] = student_groups
-        student_gui_objects["student_emails_label"] = student_emails_label
-        student_gui_objects["student_emails"] = student_emails
-        student_gui_objects["student_notes_label"] = student_notes_label
-        student_gui_objects["student_notes"] = student_notes
-        student_gui_objects["change_data_button"] = change_data_button
-        student_gui_objects["add_student_button"] = add_student_button
-        student_gui_objects["remove_student_button"] = remove_student_button
+        this_tab.student_uid_label = My_Label(
+                this_tab.uid_frame,
+                text="UID:", column=0,
+                row=0)
+        this_tab.student_uid_entry = My_Entry(
+                this_tab.uid_frame,
+                width=32, column=1,
+                row=0)
+        this_tab.student_uid_goto_button = My_Button(
+                this_tab.uid_frame,
+                text="goto", column=1,
+                row=1)
+        this_tab.student_uid_previous_button = My_Button(
+                this_tab.uid_frame,
+                text="<", column=0, row=1)
+        this_tab.student_uid_next_button = My_Button(
+                this_tab.uid_frame,
+                text=">", column=2, row=1)
 
-        student_groups_label.grid(column=0, row=3)
-        student_groups.grid(column=1, row=3)
-        student_emails_label.grid(column=0, row=4)
-        student_emails.grid(column=1, row=4)
-        student_notes_label.grid(column=0, row=5)
-        student_notes.grid(column=1, row=5)
-        change_data_button.grid(column=1, row=6, sticky="W")
-        add_student_button.grid(column=1, row=6, sticky="N")
-        remove_student_button.grid(column=1, row=6, sticky="E")
+        main_window_tab_notebook.add(
+                this_tab.frame,
+                text="Student")
+        main_window_tab_notebook.pack(
+            expand=1,
+            fill="both",
+            side="left")
 
-        all_students_label = tk.Label(all_students_frame, text="Students:")
-        all_students_label.grid(column=0, row=0, sticky="W")
-        all_students_listbox = tk.Listbox(all_students_frame, height=20, width=32)
-        all_students_listbox.grid(column=0, row=1)
-        student_gui_objects["all_students_label"] = all_students_label
-        student_gui_objects["all_students_listbox"] = all_students_listbox
+        def organise_student_tab(the_tab):
+            """organises the elements in the student tab"""
+            #NOTE(tnebes) this is dumb.
+            the_tab.frame.pack()
+            the_tab.student_info_frame.pack(side=tk.LEFT)
+            the_tab.all_students_frame.pack(side=tk.RIGHT)
+            the_tab.uid_frame.pack(side=tk.BOTTOM)
 
-        student_uid_label = tk.Label(uid_frame, text="UID:")
-        student_uid_entry_var = tk.StringVar()
-        student_uid_entry = ttk.Entry(uid_frame, width=32, textvariable=student_uid_entry_var)
-        student_uid_goto_button = ttk.Button(uid_frame, text="goto")
-        student_uid_previous_button = ttk.Button(uid_frame, text="<")
-        student_uid_next_button = ttk.Button(uid_frame, text=">")
-        student_gui_objects["student_uid_label"] = student_uid_label
-        student_gui_objects["student_uid_entry_var"] = student_uid_entry_var
-        student_gui_objects["student_uid_entry"] = student_uid_entry
-        student_gui_objects["student_uid_goto_button"] = student_uid_goto_button
-        student_gui_objects["student_uid_previous_button"] = student_uid_previous_button
-        student_gui_objects["student_uid_next_button"] = student_uid_next_button
+        organise_student_tab(this_tab)
+        main_window_tab_notebook.add(
+                this_tab.frame,
+                text="Student")
+        main_window_tab_notebook.pack(
+                expand=1, fill="both",
+                side="left")
 
-        student_uid_label.grid(column=0, row=0)
-        student_uid_entry.grid(column=1, row=0)
-        student_uid_goto_button.grid(column=1, row=1)
-        student_uid_previous_button.grid(column=0, row=1)
-        student_uid_next_button.grid(column=2, row=1)
-
-        main_window_tab_notebook.add(this_tab_frame, text="Student")
-        main_window_tab_notebook.pack(expand=1, fill="both", side="left")
-
-        return student_gui_objects
-   
-    tab_contents["students"] = create_student_tab()
+        return this_tab
+    
+    all_tabs["students"] = create_student_tab()
 
     def create_groups_tab():
+
+        this_tab = My_Tab("groups")
+
+        this_tab.frame = tk.Frame(main_window)
+        this_tab.frame.pack()
+        this_tab.groups_frame = tk.Frame(this_tab.frame)
+        this_tab.groups_frame.pack(side="left")
+
+        this_tab.groups_label = My_Label(
+                this_tab.groups_frame, text="Groups:",
+                column=0, row=0, sticky="W")
+        this_tab.groups_listbox = My_Listbox(
+                this_tab.groups_frame,
+                height=16, width=32,
+                column=0, row=1)
+        this_tab.add_group_button = My_Button(
+                this_tab.groups_frame, text="Add",
+                column=0, row=2, sticky="W")
+        this_tab.change_group_button = My_Button(
+                this_tab.groups_frame, text="Change",
+                column=0, row=2, sticky="W")
+        this_tab.remove_group_button = My_Button(
+                this_tab.groups_frame, text="Remove",
+                column=0, row=2, sticky="E")
+
+        this_tab.students_group_frame = tk.Frame(this_tab.frame)
+        this_tab.students_group_frame.pack(side="right")
+        this_tab.students_group_label = My_Label(
+                this_tab.students_group_frame,
+                text="Students in group:",
+                column=0, row=0, sticky="W")
+        this_tab.students_group_listbox = My_Listbox(
+                this_tab.students_group_frame,
+                height=32, width=24,
+                column=0, row=1)
+        this_tab.students_add_button = My_Button(
+                this_tab.students_group_frame,
+                text="Add", column=0, row=2,
+                sticky="W")
+        this_tab.students_remove_button = My_Button(
+                this_tab.students_group_frame,
+                text="Remove", column=0, row=2,
+                sticky="E")
+
+        main_window_tab_notebook.add(
+                this_tab.frame, text="Groups")
+        main_window_tab_notebook.pack(
+                expand=1, fill="both",
+                side="left")
+
+        return this_tab
         
-        group_ui_objects = {}
-
-        group_ui_objects["this_tab_frame"] = tk.Frame(main_window)
-        this_tab_frame = group_ui_objects["this_tab_frame"]
-        this_tab_frame.pack()
-        group_ui_objects["groups_frame"] = tk.Frame(this_tab_frame)
-        groups_frame = group_ui_objects["groups_frame"]
-        groups_frame.pack(side="left")
-
-        group_ui_objects["groups_label"] = groups_label = tk.Label(groups_frame, text="Groups:")
-        groups_label.grid(column=0, row=0, sticky="W")
-        group_ui_objects["groups_listbox"] = groups_listbox = tk.Listbox(groups_frame, height=16, width=32)
-        groups_listbox.grid(column=0, row=1)
-        group_ui_objects["add_group_button"] = add_group_button = tk.Button(groups_frame, text="Add")
-        add_group_button.grid(column=0, row=2, sticky="W")
-        group_ui_objects["change_group_button"] = change_group_button = tk.Button(groups_frame, text="Change")
-        change_group_button.grid(column=0, row=2, sticky="N")
-        group_ui_objects["remove_group_button"] = remove_group_button = tk.Button(groups_frame, text="Remove")
-        remove_group_button.grid(column=0, row=2, sticky="E")
-
-        group_ui_objects["students_group_frame"] = tk.Frame(this_tab_frame)
-        students_group_frame = group_ui_objects["students_group_frame"]
-        students_group_frame.pack(side="right")
-        group_ui_objects["students_group_label"] = students_group_label = tk.Label(students_group_frame, text="Students in group:")
-        students_group_label.grid(column=0, row=0, sticky="W")
-        group_ui_objects["students_group_listbox"] = students_group_listbox = tk.Listbox(students_group_frame, height=32, width=24)
-        students_group_listbox.grid(column=0, row=1)
-        group_ui_objects["students_add_button"] = students_add_button = tk.Button(students_group_frame, text="Add")
-        students_add_button.grid(column=0, row=2, sticky="W")
-        group_ui_objects["students_remove_button"] = students_remove_button = tk.Button(students_group_frame, text="Remove")
-        students_remove_button.grid(column=0, row=2, sticky="E")
-
-        main_window_tab_notebook.add(this_tab_frame, text="Groups")
-        main_window_tab_notebook.pack(expand=1, fill="both", side="left")
-
-        return group_ui_objects
-
-    tab_contents["groups"] = create_groups_tab()
+    all_tabs["groups"] = create_groups_tab()
 
     def create_emails_tab():
 
-        email_ui_objects = {}
+        this_tab = My_Tab("emails")
 
-        email_ui_objects["this_tab_frame"] = this_tab_frame = tk.Frame(main_window)
-        this_tab_frame.pack()
-        email_ui_objects["email_filter_frame"] = email_filter_tab = tk.Frame(this_tab_frame)
-        email_filter_tab.pack(side="left")
-        email_ui_objects["email_list_frame"] = email_list_frame = tk.Frame(this_tab_frame)
-        email_list_frame.pack(side="right")
+        this_tab.frame = tk.Frame(main_window)
+        this_tab.frame.pack()
+        this_tab.email_filter_frame = tk.Frame(this_tab.frame)
+        this_tab.email_filter_frame.pack(side="left")
+        this_tab.email_list_frame = tk.Frame(this_tab.frame)
+        this_tab.email_list_frame.pack(side="right")
         
-        email_ui_objects["check_students_emails"] = check_students_emails = My_Checkbutton(email_filter_tab, "Students")
-        email_ui_objects["check_group_emails"] = check_group_emails = My_Checkbutton(email_filter_tab, "Groups")
-        check_students_emails.the_button.grid(column=0, row=0, sticky="W")
-        check_group_emails.the_button.grid(column=0, row=0, sticky="E")
-        email_ui_objects["emails_listbox"] = emails_listbox = tk.Listbox(email_filter_tab, height=28, width=32)
-        emails_listbox.grid(column=0, row=1)
+        this_tab.check_students_emails = My_Checkbutton(
+                this_tab.email_filter_frame, "Students",
+                column=0, row=0, sticky="W")
+        this_tab.check_group_emails = My_Checkbutton(
+                this_tab.email_filter_frame, "Groups",
+                column=0, row=0, sticky="E")
+        this_tab.emails_listbox = My_Listbox(
+                this_tab.email_filter_frame,
+                height=28, width=32,
+                column=0, row=1)
         
-        email_ui_objects["emails_label"] = emails_label = tk.Label(email_list_frame, text="Emails:")
-        emails_label.grid(column=0, row=0, sticky="W")
-        email_ui_objects["emails_listbox"] = emails_listbox = tk.Listbox(email_list_frame, height=28, width=32)
-        emails_listbox.grid(column=0, row=1)
-        email_ui_objects["add_email_button"] = add_email_button = tk.Button(email_list_frame, text="Add")
-        email_ui_objects["remove_email_button"] = remove_email_button = tk.Button(email_list_frame, text="Remove")
-        add_email_button.grid(column=0, row=2, sticky="W")
-        remove_email_button.grid(column=0, row=2, sticky="E")
+        this_tab.emails_label = My_Label(
+                this_tab.email_list_frame, text="Emails:",
+                column=0, row=0,
+                sticky="W")
+        this_tab.emails_listbox = My_Listbox(
+                this_tab.email_list_frame,
+                height=28, width=32,
+                column=0, row=1)
+        this_tab.add_email_button = My_Button(
+                this_tab.email_list_frame,
+                text="Add",
+                column=0, row=2,
+                sticky="W")
+        this_tab.remove_email_button = My_Button(
+                this_tab.email_list_frame,
+                text="Remove",
+                column=0, row=2,
+                sticky="W")
 
-        main_window_tab_notebook.add(this_tab_frame, text="E-mails")
-        main_window_tab_notebook.pack(expand=1, fill="both", side="left")
+        main_window_tab_notebook.add(
+                this_tab.frame, text="E-mails")
+        main_window_tab_notebook.pack(
+                expand=1, fill="both",
+                side="left")
 
-        return email_ui_objects
+        return this_tab
 
-    tab_contents["emails"] = create_emails_tab()
+    all_tabs["emails"] = create_emails_tab()
 
     def create_notes_tab():
 
-        notes_ui_objects = {}
+        this_tab = My_Tab("notes")
 
-        notes_ui_objects["this_tab_frame"] = this_tab_frame = tk.Frame(main_window)
-        this_tab_frame.pack()
+        this_tab.frame = tk.Frame(main_window)
+        this_tab.frame.pack()
 
-        notes_ui_objects["students_frame"] = students_frame = tk.Frame(this_tab_frame)
-        students_frame.pack(side="left")
-        notes_ui_objects["student_notes_frame"] = student_notes_frame = tk.Frame(this_tab_frame)
-        student_notes_frame.pack(side="left")
-        notes_ui_objects["note_frame"] = note_frame = tk.Frame(this_tab_frame)
-        note_frame.pack(side="right")
+        this_tab.students_frame = tk.Frame(this_tab.frame)
+        this_tab.students_frame.pack(side="left")
+        this_tab.student_notes_frame = tk.Frame(this_tab.frame)
+        this_tab.student_notes_frame.pack(side="left")
+        this_tab.note_frame = tk.Frame(this_tab.frame)
+        this_tab.note_frame.pack(side="right")
 
-        notes_ui_objects["students_listbox_label"] = students_listbox = tk.Label(students_frame, text="Students:")
-        students_listbox.grid(column=0, row=0, sticky="W")
-        notes_ui_objects["students_listbox"] = students_listbox = tk.Listbox(students_frame, height=28, width=32)
-        students_listbox.grid(column=0, row=1)
+        this_tab.students_listbox_label = My_Label(
+                this_tab.students_frame, text="Students:",
+                column=0, row=0,
+                sticky="W")
+        this_tab.students_listbox = My_Listbox(
+                this_tab.students_frame,
+                height=28, width=32,
+                column=0, row=1)
 
-        notes_ui_objects["student_notes_label"] = student_notes_label = tk.Label(student_notes_frame, text="Notes:")
-        student_notes_label.grid(column=0, row=0, sticky="W")
-        notes_ui_objects["student_notes_listbox"] = student_notes_listbox = tk.Listbox(student_notes_frame, height=10, width=32)
-        student_notes_listbox.grid(column=0, row=1)
-        notes_ui_objects["student_add_note_button"] = student_add_note_button = tk.Button(student_notes_frame, text="Add")
-        student_add_note_button.grid(column=0, row=2, sticky="W")
-        notes_ui_objects["student_remove_note_button"] = student_remove_note_button = tk.Button(student_notes_frame, text="Remove")
-        student_remove_note_button.grid(column=0, row=2, sticky="E")
+        this_tab.student_notes_label = My_Label(
+                this_tab.student_notes_frame, text="Notes:",
+                column=0, row=0,
+                sticky="W")
+        this_tab.student_notes_listbox = My_Listbox(
+                this_tab.student_notes_frame,
+                height=10, width=32,
+                column=0, row=1)
+        this_tab.student_add_note_button = My_Button(
+                this_tab.student_notes_frame,
+                text="Add",
+                column=0, row=2,
+                sticky="W")
+        this_tab.student_remove_note_button = My_Button(
+                this_tab.student_notes_frame,
+                text="Remove",
+                column=0, row=2,
+                sticky="E")
 
-        notes_ui_objects["student_note_label"] = student_note_label = tk.Label(note_frame, text="Note:")
-        student_note_label.grid(column=0, row=0, sticky="W")
-        notes_ui_objects["student_note_box"] = student_note_box = tk.Text(note_frame, width=32, height=20)
-        student_note_box.grid(column=0, row=1)
-        notes_ui_objects["student_note_apply"] = student_note_apply = tk.Button(note_frame, text="Apply")
-        student_note_apply.grid(column=0, row=2, sticky="N")
+        this_tab.student_note_label = My_Label(
+                this_tab.note_frame, text="Note:",
+                column=0, row=0,
+                sticky="W")
+        this_tab.student_note_box = My_Text(
+                this_tab.note_frame,
+                width=32, height=20,
+                column=0, row=1)
+        this_tab.student_note_apply = My_Button(
+                this_tab.note_frame, text="Apply",
+                column=0, row=2,
+                sticky="N")
      
-        main_window_tab_notebook.add(this_tab_frame, text="Notes")
-        main_window_tab_notebook.pack(expand=1, fill="both", side="left")
+        main_window_tab_notebook.add(
+                this_tab.frame, text="Notes")
+        main_window_tab_notebook.pack(
+                expand=1, fill="both",
+                side="left")
 
-        return notes_ui_objects
+        return this_tab
 
-    tab_contents["notes"] = create_notes_tab()
+    all_tabs["notes"] = create_notes_tab()
 
-    return tab_contents
+    return all_tabs
 
-print(create_tabs())
+the_gui = create_tabs()
 
