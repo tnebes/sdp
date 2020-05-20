@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import ttk
 from dataclasses import dataclass
 
+
+# NOTE(tnebes) GUI stuff lives here 
+
 class My_Checkbutton():
     """Creates a checkbutton. Variable is .var, button itself is .the_button."""
     def __init__(self, location, my_text, column, row, sticky="NSEW"):
@@ -45,6 +48,55 @@ class My_Text():
 class My_Tab():
     """A class used for storing references to GUI objects in a tab"""
     name: str
+
+# NOTE(tnebes) data lives here
+
+@dataclass
+class Student():
+    """Student object. Must have:
+    .uid .
+    Has:
+    .first_name
+    .last_name
+    .groups
+    .emails
+    .notes"""
+    uid: int
+
+@dataclass
+class Group():
+    """Group object. Must have:
+    .uid
+    has:
+    .association
+    """
+    uid: int
+
+@dataclass
+class Email():
+    """Email object. Must have:
+    .uid
+    has:
+    .full_name
+    .relation
+    .association
+    """
+    uid: int
+
+@dataclass
+class Note():
+    """Note object. Must have:
+    .uid
+    has:
+    .association
+    .text
+    .date
+    """
+    uid: int
+
+
+
+
 
         
         

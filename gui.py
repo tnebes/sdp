@@ -2,8 +2,9 @@ import tkinter as tk
 from tkinter import ttk
 from classes import *
 
+
 SCREEN_RESOLUTION = "800x600"
-VERSION = "0.1"
+VERSION = "0.2"
 
 main_window = tk.Tk()
 main_window.title("Student Data Programme " + VERSION)
@@ -11,13 +12,13 @@ main_window.resizable(False, False)
 main_window.geometry(SCREEN_RESOLUTION)
 main_window_tab_notebook = ttk.Notebook(main_window)
 
-def create_tabs():
+def _create_tabs():
     """Creates all the tabs necessary for the program to work.
     Function returns all the tabs which contain all the GUI elements"""
 
     all_tabs = {}
 
-    def create_student_tab():
+    def _create_student_tab():
         """creates all the elements of the student tab and returns the elements which are storied in the My_Tab class"""
         # NOTE(tnebes) All the frames in this tab
         this_tab = My_Tab("students")
@@ -116,19 +117,19 @@ def create_tabs():
                 this_tab.frame,
                 text="Student")
         main_window_tab_notebook.pack(
-            expand=1,
-            fill="both",
-            side="left")
+                expand=1,
+                fill="both",
+                side="left")
 
-        def organise_student_tab(the_tab):
+        def _organise_student_tab(the_tab):
             """organises the elements in the student tab"""
-            #NOTE(tnebes) this is dumb.
+            #NOTE(tnebes) this is dumb. don't do this
             the_tab.frame.pack()
             the_tab.student_info_frame.pack(side=tk.LEFT)
             the_tab.all_students_frame.pack(side=tk.RIGHT)
             the_tab.uid_frame.pack(side=tk.BOTTOM)
 
-        organise_student_tab(this_tab)
+        _organise_student_tab(this_tab)
         main_window_tab_notebook.add(
                 this_tab.frame,
                 text="Student")
@@ -138,9 +139,9 @@ def create_tabs():
 
         return this_tab
     
-    all_tabs["students"] = create_student_tab()
+    all_tabs["students"] = _create_student_tab()
 
-    def create_groups_tab():
+    def _create_groups_tab():
 
         this_tab = My_Tab("groups")
 
@@ -193,9 +194,9 @@ def create_tabs():
 
         return this_tab
         
-    all_tabs["groups"] = create_groups_tab()
+    all_tabs["groups"] = _create_groups_tab()
 
-    def create_emails_tab():
+    def _create_emails_tab():
 
         this_tab = My_Tab("emails")
 
@@ -244,9 +245,9 @@ def create_tabs():
 
         return this_tab
 
-    all_tabs["emails"] = create_emails_tab()
+    all_tabs["emails"] = _create_emails_tab()
 
-    def create_notes_tab():
+    def _create_notes_tab():
 
         this_tab = My_Tab("notes")
 
@@ -309,9 +310,9 @@ def create_tabs():
 
         return this_tab
 
-    all_tabs["notes"] = create_notes_tab()
+    all_tabs["notes"] = _create_notes_tab()
 
     return all_tabs
 
-the_gui = create_tabs()
+
 
